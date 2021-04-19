@@ -5,25 +5,19 @@
 }
 program simpleRest;
 
-{$APPTYPE CONSOLE}
-
 uses
   SysUtils,
-  Dos,
   Classes,
   fphttpclient,
   fpopenssl,
-  jsonparser,
   openssl,
-  jsonscanner,
   opensslsockets;
 
 var
-  nParam: integer;
   Url: string;
   Rest: TFPHttpClient;
   Resultado: string;
-  saveFile: TStringlist;
+  saveFile: TStringList;
   HH, MM, SS, MS: word;
 begin
 
@@ -34,11 +28,9 @@ begin
   end;
 
   Url := ParamStr(1);
-
-
   InitSSLInterface;
-
   Rest := TFPHttpClient.Create(nil);
+
   try
     try
       Rest.AllowRedirect := True;
@@ -58,19 +50,22 @@ begin
   finally
     Rest.Free;
   end;
+
   Writeln(#10 + 'Finished : ' + FormatDateTime('hh:mm:ss', Now));
   writeLn(#10 + 'Response code: ' + IntToStr(Rest.ResponseStatusCode));
-   if paramCount() > 1 then
+
+  if paramCount() > 1 then
   begin
-    saveFile:= TStringlist.create;
-  try
-    saveFile.Add(Resultado);
-    saveFile.SaveToFile(ParamStr(2));
-  finally
-    saveFile.Free;
-    Writeln(#10 + 'Saved to : ' + ParamStr(2));
-  end;
-  end else
-    WriteLn(#10 +Resultado);
+    saveFile := TStringList.Create;
+    try
+      saveFile.Add(Resultado);
+      saveFile.SaveToFile(ParamStr(2));
+    finally
+      saveFile.Free;
+      Writeln(#10 + 'Saved to : ' + ParamStr(2));
+    end;
+  end
+  else
+    WriteLn(#10 + Resultado);
 
 end.
